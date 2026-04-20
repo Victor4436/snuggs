@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>For Snuggles 🦋</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&family=Outfit:wght@300;400;500;600;700&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+:root{
+  --gold:#C9A84C;
+  --gold2:#F0D080;
+  --gold3:#FFF0B0;
+  --ink:#0D0D1A;
+  --ink2:#13132B;
+  --ink3:#1C1C3A;
+  --rose:#E8637A;
+  --lavender:#B57BCA;
+  --mint:#4ECDC4;
+  --cream:#FDF8EE;
+  --text:#F0EDE8;
+}
+
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);font-family:'Outfit',sans-serif;color:var(--text);}
+
+/* ── CANVAS BACKGROUND ── */
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+/* ── SCREENS ── */
+.screen{
+  position:fixed;top:0;left:0;width:100%;height:100%;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:30px 24px;overflow-y:auto;overflow-x:hidden;
+  opacity:0;pointer-events:none;transition:opacity 0.7s ease;
+  z-index:10;
+}
+.screen.active{opacity:1;pointer-events:all;}
+
+/* ── SCREEN 1: LANDING ── */
+#s1{background:radial-gradient(ellipse at 50% 60%, #1C1C3A 0%, #0D0D1A 70%);}
+.s1-inner{display:flex;flex-direction:column;align-items:center;text-align:center;gap:0;}
+.butterfly-wrap{position:relative;width:120px;height:120px;margin:0 auto 8px;}
+.big-butterfly{font-size:90px;animation:bfloat 4s ease-in-out infinite;display:block;filter:drop-shadow(0 0 30px rgba(201,168,76,0.6));}
+@keyframes bfloat{0%,100%{transform:translateY(0) rotate(-8deg) scale(1);}50%{transform:translateY(-18px) rotate(8deg) scale(1.05);}}
+.s1-eyebrow{font-family:'Caveat',cursive;font-size:18px;color:rgba(201,168,76,0.7);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;}
+.s1-title{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,14vw,72px);font-weight:700;line-height:0.95;margin-bottom:6px;background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.s1-title em{font-style:italic;font-weight:300;}
+.s1-sub{font-family:'Caveat',cursive;font-size:22px;color:rgba(240,237,232,0.55);margin-bottom:40px;}
+.s1-knock{font-family:'Caveat',cursive;font-size:16px;color:rgba(240,237,232,0.35);margin-bottom:20px;animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:0.35;}50%{opacity:0.8;}}
+.gold-btn{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--ink);border:none;
+  padding:18px 48px;border-radius:100px;
+  font-family:'Outfit',sans-serif;font-size:17px;font-weight:700;
+  cursor:pointer;letter-spacing:0.5px;
+  box-shadow:0 8px 40px rgba(201,168,76,0.35),0 0 0 1px rgba(201,168,76,0.2);
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.gold-btn::after{content:'';position:absolute;top:-50%;left:-60%;width:40%;height:200%;background:rgba(255,255,255,0.3);transform:skewX(-20deg);animation:shimmer 3s ease infinite;}
+@keyframes shimmer{0%{left:-60%;}100%{left:160%;}}
+.gold-btn:active{transform:scale(0.96);}
+
+/* ── SCREEN 2: WHO IS THIS ── */
+#s2{background:radial-gradient(ellipse at 30% 70%, #1C1C3A 0%, #0D0D1A 60%);}
+.who-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:100%;max-width:400px;margin:20px 0;}
+.who-btn{
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(255,255,255,0.1);
+  color:var(--text);padding:20px 12px;border-radius:22px;
+  font-family:'Outfit',sans-serif;font-size:13px;font-weight:500;
+  cursor:pointer;transition:all 0.3s;text-align:center;line-height:1.4;
+}
+.who-btn .we{font-size:32px;display:block;margin-bottom:8px;}
+.who-btn:active{transform:scale(0.95);}
+.who-btn.shake{animation:wshake 0.4s ease;border-color:var(--rose)!important;background:rgba(232,99,122,0.12)!important;}
+.who-btn.glow{border-color:var(--gold)!important;background:rgba(201,168,76,0.12)!important;animation:wpulse 0.5s ease;}
+@keyframes wshake{0%,100%{transform:translateX(0);}25%{transform:translateX(-8px);}75%{transform:translateX(8px);}}
+@keyframes wpulse{0%{transform:scale(1);}50%{transform:scale(1.04);}100%{transform:scale(1);}}
+.who-msg{font-family:'Caveat',cursive;font-size:20px;min-height:28px;text-align:center;color:var(--rose);transition:opacity 0.3s;opacity:0;}
+.who-msg.show{opacity:1;}
+
+/* ── SCREEN 3: NIGHT SKY TIMELINE ── */
+#s3{background:linear-gradient(180deg,#060612 0%,#0D0D2A 50%,#0D0D1A 100%);}
+.timeline-wrap{width:100%;max-width:400px;}
+.tl-item{display:flex;gap:16px;margin-bottom:28px;opacity:0;transform:translateX(-25px);transition:all 0.6s ease;}
+.tl-item.vis{opacity:1;transform:translateX(0);}
+.tl-icon{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1.5px solid rgba(201,168,76,0.3);}
+.tl-text h4{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;color:var(--gold2);margin-bottom:4px;}
+.tl-text p{font-family:'Caveat',cursive;font-size:17px;color:rgba(240,237,232,0.65);line-height:1.5;}
+
+/* ── SCREEN 4: CHAT ── */
+#s4{background:radial-gradient(ellipse at 70% 30%,#1C1830 0%,#0D0D1A 70%);}
+.chat-wrap{width:100%;max-width:400px;display:flex;flex-direction:column;gap:10px;}
+.cb{
+  padding:14px 18px;border-radius:22px;
+  font-family:'Caveat',cursive;font-size:19px;line-height:1.4;
+  max-width:82%;opacity:0;transform:translateY(16px);transition:all 0.45s ease;
+}
+.cb.vis{opacity:1;transform:translateY(0);}
+.cb.them{background:rgba(255,255,255,0.1);border-radius:22px 22px 22px 4px;align-self:flex-start;}
+.cb.me{background:linear-gradient(135deg,#1A6EFF,#0050CC);border-radius:22px 22px 4px 22px;align-self:flex-end;}
+.cb.gold{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);font-weight:700;border-radius:22px 22px 4px 22px;align-self:flex-end;}
+.typing{display:flex;gap:5px;padding:14px 18px;background:rgba(255,255,255,0.08);border-radius:22px 22px 22px 4px;align-self:flex-start;width:fit-content;opacity:0;transition:opacity 0.3s;}
+.typing.vis{opacity:1;}
+.typing span{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.5);animation:tdot 1.2s ease-in-out infinite;}
+.typing span:nth-child(2){animation-delay:0.2s;}
+.typing span:nth-child(3){animation-delay:0.4s;}
+@keyframes tdot{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-8px);}}
+
+/* ── SCREEN 5: QUIZ ── */
+#s5{background:radial-gradient(ellipse at 50% 20%,#0F2040 0%,#0D0D1A 70%);}
+.quiz-progress{width:100%;max-width:400px;height:5px;background:rgba(255,255,255,0.08);border-radius:10px;margin-bottom:28px;overflow:hidden;}
+.quiz-bar{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:10px;transition:width 0.6s ease;width:0%;}
+.quiz-q{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:600;line-height:1.3;margin-bottom:28px;text-align:center;max-width:400px;}
+.quiz-opts{display:flex;flex-direction:column;gap:12px;width:100%;max-width:400px;}
+.qopt{
+  background:rgba(255,255,255,0.05);border:1.5px solid rgba(255,255,255,0.1);
+  color:var(--text);padding:16px 20px;border-radius:16px;
+  font-family:'Outfit',sans-serif;font-size:15px;font-weight:400;
+  cursor:pointer;transition:all 0.25s;text-align:left;
+}
+.qopt:active{transform:scale(0.98);}
+.qopt.correct{border-color:var(--mint)!important;background:rgba(78,205,196,0.15)!important;animation:wpulse 0.4s ease;}
+.qopt.wrong{border-color:var(--rose)!important;background:rgba(232,99,122,0.12)!important;animation:wshake 0.4s ease;}
+.quiz-fb{font-family:'Caveat',cursive;font-size:20px;text-align:center;min-height:28px;color:var(--gold2);margin-top:12px;}
+.quiz-num{font-family:'Caveat',cursive;font-size:16px;color:rgba(240,237,232,0.4);text-align:center;margin-bottom:10px;}
+
+/* ── SCREEN 6: CONFETTI ── */
+#s6{background:radial-gradient(ellipse at 50% 50%,#1A0A2E 0%,#0D0D1A 70%);}
+.confetti-zone{
+  width:100%;max-width:400px;height:220px;
+  position:relative;border-radius:28px;
+  background:rgba(255,255,255,0.04);
+  border:2px dashed rgba(201,168,76,0.25);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;overflow:hidden;transition:border-color 0.3s;
+  user-select:none;
+}
+.confetti-zone:active{border-color:rgba(201,168,76,0.6);}
+.cz-hint{font-family:'Caveat',cursive;font-size:22px;color:rgba(255,255,255,0.35);pointer-events:none;text-align:center;line-height:1.5;}
+.tap-number{font-family:'Cormorant Garamond',serif;font-size:72px;font-weight:700;background:linear-gradient(135deg,var(--gold),var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
+.tap-sub{font-family:'Caveat',cursive;font-size:18px;color:rgba(240,237,232,0.5);margin-bottom:28px;}
+.cpiece{position:absolute;border-radius:3px;animation:cfall linear forwards;pointer-events:none;}
+@keyframes cfall{0%{transform:translateY(-10px) rotate(0deg);opacity:1;}100%{transform:translateY(240px) rotate(540deg);opacity:0;}}
+
+/* ── SCREEN 7: PRAYER WALL ── */
+#s7{background:linear-gradient(160deg,#060612 0%,#0D0D1A 100%);}
+.prayer-card{
+  width:100%;max-width:400px;
+  background:rgba(255,255,255,0.03);
+  border:1px solid rgba(201,168,76,0.2);
+  border-radius:28px;padding:30px 24px;
+  position:relative;overflow:hidden;
+}
+.prayer-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.prayer-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.scripture{
+  border-left:3px solid var(--gold);
+  padding:14px 16px;border-radius:0 14px 14px 0;
+  background:rgba(201,168,76,0.06);
+  margin-bottom:16px;
+}
+.scripture p{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:16px;color:var(--gold2);line-height:1.6;margin-bottom:6px;}
+.scripture span{font-family:'Outfit',sans-serif;font-size:11px;color:rgba(201,168,76,0.55);font-weight:500;letter-spacing:1px;text-transform:uppercase;}
+
+/* ── SCREEN 8: FINAL LETTER ── */
+#s8{background:radial-gradient(ellipse at 50% 80%,#1C1830 0%,#060612 70%);}
+.letter-wrap{width:100%;max-width:400px;text-align:center;}
+.letter-title{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,10vw,52px);font-weight:700;font-style:italic;line-height:1.1;margin-bottom:24px;background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.letter-body{font-family:'Outfit',sans-serif;font-size:15px;line-height:1.9;color:rgba(240,237,232,0.8);margin-bottom:28px;text-align:left;}
+.letter-body strong{color:var(--gold2);font-weight:600;}
+.sign-block{text-align:center;margin-top:20px;}
+.sign-from{font-family:'Caveat',cursive;font-size:20px;color:rgba(240,237,232,0.5);}
+.sign-name{font-family:'Cormorant Garamond',serif;font-size:42px;font-weight:700;font-style:italic;background:linear-gradient(135deg,var(--gold),var(--rose));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+
+/* ── SCREEN 9: SURPRISE ── */
+#s9{background:radial-gradient(ellipse at 50% 50%,#0D1A0D 0%,#060612 80%);}
+.surprise-inner{text-align:center;display:flex;flex-direction:column;align-items:center;}
+.crown{font-size:80px;animation:crownBounce 1s ease-in-out infinite;filter:drop-shadow(0 0 20px rgba(201,168,76,0.8));}
+@keyframes crownBounce{0%,100%{transform:translateY(0) rotate(-5deg);}50%{transform:translateY(-15px) rotate(5deg);}}
+.s9-title{font-family:'Cormorant Garamond',serif;font-size:clamp(32px,9vw,48px);font-weight:700;font-style:italic;color:white;margin:20px 0 10px;}
+.s9-pill{display:inline-block;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--ink);padding:8px 24px;border-radius:100px;font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;margin-bottom:20px;letter-spacing:1px;}
+.s9-body{font-family:'Caveat',cursive;font-size:20px;color:rgba(240,237,232,0.7);line-height:1.6;max-width:340px;margin-bottom:30px;}
+
+/* ── SHARED ELEMENTS ── */
+.screen-title{font-family:'Cormorant Garamond',serif;font-size:clamp(26px,8vw,38px);font-weight:700;text-align:center;line-height:1.2;margin-bottom:8px;}
+.screen-sub{font-family:'Caveat',cursive;font-size:18px;color:rgba(240,237,232,0.5);text-align:center;margin-bottom:24px;}
+.emoji-big{font-size:64px;display:block;text-align:center;margin-bottom:12px;}
+.next-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--ink);border:none;
+  padding:16px 44px;border-radius:100px;
+  font-family:'Outfit',sans-serif;font-size:16px;font-weight:700;
+  cursor:pointer;
+  box-shadow:0 6px 30px rgba(201,168,76,0.3);
+  transition:transform 0.2s,box-shadow 0.2s;
+  margin-top:16px;
+}
+.next-btn:active{transform:scale(0.96);}
+.next-btn.hidden{display:none;}
+
+/* ── FLOATING PARTICLES ── */
+.fp{position:fixed;pointer-events:none;z-index:1;animation:fpFloat linear infinite;opacity:0;}
+@keyframes fpFloat{0%{transform:translateY(105vh) rotate(0deg);opacity:0;}5%{opacity:0.6;}90%{opacity:0.6;}100%{transform:translateY(-10vh) rotate(360deg);opacity:0;}}
+
+/* ── TRANSITION OVERLAY ── */
+#overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--ink);z-index:100;pointer-events:none;opacity:0;transition:opacity 0.35s ease;}
+#overlay.flash{opacity:1;}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+<div id="overlay"></div>
+
+<!-- S1: LANDING -->
+<div class="screen active" id="s1">
+  <div class="s1-inner">
+    <div class="butterfly-wrap"><span class="big-butterfly">🦋</span></div>
+    <p class="s1-eyebrow">A message just for you</p>
+    <h1 class="s1-title">Snuggles,<br><em>This is for you.</em></h1>
+    <p class="s1-sub">Someone made something special 👀</p>
+    <p class="s1-knock">*knock knock* open this before you do anything else*</p>
+    <button class="gold-btn" onclick="go(2)">Open now 🎀</button>
+  </div>
+</div>
+
+<!-- S2: WHO IS THIS FOR -->
+<div class="screen" id="s2">
+  <span class="emoji-big">🤔</span>
+  <h2 class="screen-title">Wait… who exactly is this for?</h2>
+  <p class="screen-sub">Pick carefully. Only one is correct 👀</p>
+  <div class="who-grid">
+    <button class="who-btn" onclick="wrongWho(this,'Lmaooo no 😂')"><span class="we">😐</span>Just some random girl</button>
+    <button class="who-btn" onclick="wrongWho(this,'Try again 💀')"><span class="we">🤷‍♀️</span>I honestly don't know</button>
+    <button class="who-btn" onclick="wrongWho(this,'You wish!! 😭')"><span class="we">⚖️</span>A normal law student</button>
+    <button class="who-btn" id="rightWho" onclick="rightWho()"><span class="we">👑</span>The baddest Snuggles who just passed her bar!!</button>
+  </div>
+  <p class="who-msg" id="whoMsg">Try again!</p>
+</div>
+
+<!-- S3: JOURNEY TIMELINE -->
+<div class="screen" id="s3">
+  <span class="emoji-big">🌙</span>
+  <h2 class="screen-title">The Journey That Got You Here</h2>
+  <p class="screen-sub">Because someone was watching 👀🦋</p>
+  <div class="timeline-wrap" id="tlWrap">
+    <div class="tl-item" id="tl1">
+      <div class="tl-icon" style="background:rgba(201,168,76,0.1);">🌙</div>
+      <div class="tl-text"><h4>The Late Nights</h4><p>Reading at 2am when everyone else was fast asleep. The vibe that couldn't be interrupted for ANYTHING.</p></div>
+    </div>
+    <div class="tl-item" id="tl2">
+      <div class="tl-icon" style="background:rgba(232,99,122,0.1);">😰</div>
+      <div class="tl-text"><h4>The Fear</h4><p>The tears before results. The "what if I fail?" that kept you up. Every page you read carried that weight.</p></div>
+    </div>
+    <div class="tl-item" id="tl3">
+      <div class="tl-icon" style="background:rgba(78,205,196,0.1);">🙏</div>
+      <div class="tl-text"><h4>Someone Prayed Every Morning</h4><p>During devotion. Thanking God for you before results even came out. Believing when you couldn't.</p></div>
+    </div>
+    <div class="tl-item" id="tl4">
+      <div class="tl-icon" style="background:rgba(181,123,202,0.1);">⚖️</div>
+      <div class="tl-text"><h4>The Day You Became A Lawyer</h4><p>You. Passed. Your. Bar. No resat. No failure. SNUGGLES IS A CERTIFIED LAWYER!! 🎉</p></div>
+    </div>
+    <div class="tl-item" id="tl5">
+      <div class="tl-icon" style="background:rgba(201,168,76,0.1);">🦋</div>
+      <div class="tl-text"><h4>And Through All Of It</h4><p>Still proud. Still yours. 🦋</p></div>
+    </div>
+  </div>
+  <button class="next-btn" onclick="go(4)">Continue 🦋</button>
+</div>
+
+<!-- S4: CHAT RECREATION -->
+<div class="screen" id="s4">
+  <h2 class="screen-title" style="margin-bottom:4px;">A Conversation Worth Having</h2>
+  <p class="screen-sub">Basically how it went 😂</p>
+  <div class="chat-wrap" id="chatWrap">
+    <div class="typing vis" id="typing1"><span></span><span></span><span></span></div>
+    <div class="cb them" id="cb1">Babe I passed!! 🎉</div>
+    <div class="cb me" id="cb2">SNNUUGGLESSS!!! 😭🎉🎉</div>
+    <div class="cb them" id="cb3">But I got a 2:2...</div>
+    <div class="typing" id="typing2"><span></span><span></span><span></span></div>
+    <div class="cb me" id="cb4">2:2 or first class, you still passed!! You didn't fail!! 🎊</div>
+    <div class="cb them" id="cb5">😂 stop it</div>
+    <div class="cb me" id="cb6">I'm serious!! My baby is a LAWYER!! 👩‍⚖️</div>
+    <div class="cb gold" id="cb7">Still proud. Still yours. 🦋</div>
+  </div>
+  <button class="next-btn hidden" id="chatNext" onclick="go(5)">Next 🎀</button>
+</div>
+
+<!-- S5: QUIZ -->
+<div class="screen" id="s5">
+  <h2 class="screen-title" style="margin-bottom:4px;">Credential Verification 👩‍⚖️</h2>
+  <p class="screen-sub">Let's make sure you're really a lawyer 😂</p>
+  <div class="quiz-progress"><div class="quiz-bar" id="qbar"></div></div>
+  <p class="quiz-num" id="qnum">Question 1 of 4</p>
+  <p class="quiz-q" id="qq"></p>
+  <div class="quiz-opts" id="qopts"></div>
+  <p class="quiz-fb" id="qfb"></p>
+</div>
+
+<!-- S6: CONFETTI CELEBRATION -->
+<div class="screen" id="s6">
+  <span class="emoji-big">🎊</span>
+  <h2 class="screen-title">Tap To Celebrate!!</h2>
+  <p class="screen-sub">Every tap = one clap for you 👏</p>
+  <div class="confetti-zone" id="czone" onclick="doConfetti(event)" ontouchstart="doConfetti(event)">
+    <div class="cz-hint" id="czHint">Tap here!!<br>🎉</div>
+  </div>
+  <p class="tap-number" id="tapNum">0</p>
+  <p class="tap-sub">claps for Snuggles 👏</p>
+  <button class="next-btn hidden" id="confNext" onclick="go(7)">Read your letter 💌</button>
+</div>
+
+<!-- S7: PRAYER WALL -->
+<div class="screen" id="s7">
+  <span class="emoji-big">🙏</span>
+  <h2 class="screen-title">Words Over Your Life</h2>
+  <p class="screen-sub">Stand on these 🦋</p>
+  <div class="prayer-card" id="prayerCard">
+    <div class="scripture">
+      <p>"She is clothed with strength and dignity, and she laughs without fear of the future."</p>
+      <span>Proverbs 31:25</span>
+    </div>
+    <div class="scripture">
+      <p>"I will go before you and make the crooked places straight; I will break in pieces the gates of bronze and cut the bars of iron."</p>
+      <span>Isaiah 45:2</span>
+    </div>
+    <div class="scripture">
+      <p>"When a man's ways please the Lord, He makes even his enemies to be at peace with him."</p>
+      <span>Proverbs 16:7</span>
+    </div>
+    <div class="scripture" style="margin-bottom:0;">
+      <p>"The Lord will make you the head and not the tail; you shall be above only, and not be beneath."</p>
+      <span>Deuteronomy 28:13</span>
+    </div>
+  </div>
+  <button class="next-btn" onclick="go(8)">Almost done 🦋</button>
+</div>
+
+<!-- S8: FINAL LETTER -->
+<div class="screen" id="s8">
+  <div class="letter-wrap">
+    <span style="font-size:50px;display:block;text-align:center;margin-bottom:16px;filter:drop-shadow(0 0 20px rgba(201,168,76,0.5));">🦋</span>
+    <h2 class="letter-title">Congratulations,<br>Snuggles.</h2>
+    <div class="letter-body">
+      <p>You stayed up nights when everyone else was sleeping. You read when you were tired, when you were scared, when you didn't know if it would be enough.</p>
+      <br>
+      <p>It was enough. <strong>You are enough.</strong></p>
+      <br>
+      <p>No grade changes the fact that you fought for this. No result changes how proud I am of you. You're a lawyer now — <strong>MY lawyer</strong> — and that is everything.</p>
+      <br>
+      <p>Through every late night, every fear, every moment you doubted yourself — <strong>I never doubted you. Not once.</strong></p>
+      <br>
+      <p>Still proud. Still yours. Still thanking God for you every single morning. 🦋</p>
+    </div>
+    <div class="sign-block">
+      <p class="sign-from">With all the love in the world,</p>
+      <p class="sign-name">Snuggles 🦋</p>
+    </div>
+  </div>
+  <button class="next-btn" onclick="go(9)" style="margin-top:24px;">One last thing... 👀</button>
+</div>
+
+<!-- S9: SURPRISE FINAL -->
+<div class="screen" id="s9">
+  <div class="surprise-inner">
+    <span class="crown">👑</span>
+    <h2 class="s9-title">One Last Question</h2>
+    <p class="screen-sub" style="margin-bottom:20px;">You have to answer this one correctly 😂</p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:600;text-align:center;margin-bottom:24px;line-height:1.4;">Who made all of this<br>just for you?</p>
+    <div style="display:flex;flex-direction:column;gap:12px;width:100%;max-width:380px;" id="finalOpts">
+      <button class="qopt" onclick="finalWrong(this)">Some random person 🤷</button>
+      <button class="qopt" onclick="finalWrong(this)">Your mum probably 😂</button>
+      <button class="qopt" onclick="finalRight(this)">The most handsome, amazing, smart, nicest guy you know 😏</button>
+      <button class="qopt" onclick="finalWrong(this)">Nobody important 🙄</button>
+    </div>
+    <p class="quiz-fb" id="finalFb" style="margin-top:16px;"></p>
+    <button class="next-btn hidden" id="s9Next" onclick="go(10)" style="margin-top:20px;">And one more thing... 🫣</button>
+  </div>
+</div>
+
+<!-- S10: LOVE ME -->
+<div class="screen" id="s10" style="background:radial-gradient(ellipse at 50% 50%, #1A0A1A 0%, #0D0D1A 70%);">
+  <div style="display:flex;flex-direction:column;align-items:center;text-align:center;">
+    <span style="font-size:70px;display:block;margin-bottom:16px;animation:bfloat 3s ease-in-out infinite;filter:drop-shadow(0 0 25px rgba(232,99,122,0.7));">💝</span>
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:clamp(36px,11vw,56px);font-weight:700;font-style:italic;color:white;margin-bottom:8px;">Last question.</h2>
+    <p style="font-family:'Caveat',cursive;font-size:20px;color:rgba(240,237,232,0.5);margin-bottom:40px;">Be careful how you answer this one 👀</p>
+    <p style="font-family:'Cormorant Garamond',serif;font-size:clamp(28px,9vw,44px);font-weight:700;color:white;margin-bottom:48px;line-height:1.2;">Love me? 🦋</p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:24px;width:100%;">
+      <button id="noBtn" onclick="clickNo()" style="background:rgba(255,255,255,0.08);border:1.5px solid rgba(255,255,255,0.15);color:white;padding:16px 32px;border-radius:100px;font-family:'Outfit',sans-serif;font-size:18px;font-weight:600;cursor:pointer;transition:all 0.4s ease;">No</button>
+      <button id="yesBtn" onclick="clickYes()" style="background:linear-gradient(135deg,var(--rose),#FF8FA3);border:none;color:white;padding:16px 32px;border-radius:100px;font-family:'Outfit',sans-serif;font-size:18px;font-weight:700;cursor:pointer;transition:all 0.4s ease;box-shadow:0 6px 30px rgba(232,99,122,0.4);">Yes 🦋</button>
+    </div>
+    <p style="font-family:'Caveat',cursive;font-size:22px;color:rgba(240,237,232,0.5);margin-top:32px;min-height:30px;" id="loveFb"></p>
+  </div>
+</div>
+
+<script>
+// ── CANVAS STARFIELD ──
+const canvas = document.getElementById('bgCanvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const stars = Array.from({length:120},()=>({
+  x:Math.random()*canvas.width,y:Math.random()*canvas.height,
+  r:Math.random()*1.5+0.3,
+  a:Math.random(),da:(Math.random()-0.5)*0.008,
+  vy:Math.random()*0.08+0.02
+}));
+function drawStars(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{
+    s.a+=s.da;if(s.a<0||s.a>1)s.da*=-1;
+    s.y+=s.vy;if(s.y>canvas.height)s.y=0;
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${s.a})`;ctx.fill();
+  });
+  requestAnimationFrame(drawStars);
+}
+drawStars();
+
+// ── FLOATING PARTICLES ──
+const fpEmojis=['🦋','✨','⭐','💫','🌸','🌟'];
+for(let i=0;i<10;i++){
+  const el=document.createElement('div');
+  el.className='fp';
+  el.textContent=fpEmojis[i%fpEmojis.length];
+  el.style.cssText=`left:${Math.random()*100}%;font-size:${Math.random()*14+10}px;animation-duration:${Math.random()*12+10}s;animation-delay:${Math.random()*12}s;`;
+  document.body.appendChild(el);
+}
+
+// ── SCREEN NAVIGATION ──
+let cur=1;
+function go(n){
+  const ov=document.getElementById('overlay');
+  ov.classList.add('flash');
+  setTimeout(()=>{
+    document.querySelector('.screen.active').classList.remove('active');
+    document.getElementById('s'+n).classList.add('active');
+    ov.classList.remove('flash');
+    cur=n;
+    if(n===3)startTimeline();
+    if(n===4)startChat();
+    if(n===5)initQuiz();
+    if(n===7)animatePrayer();
+  },350);
+}
+
+// ── SCREEN 2 ──
+let wrongCount=0;
+const wrongMsgs=['Haha nice try 😂','Really?? 💀','You know the answer!!','Almost... not really 😂','Try one more time 😭'];
+function wrongWho(btn,msg){
+  btn.classList.add('shake');
+  setTimeout(()=>btn.classList.remove('shake'),400);
+  const el=document.getElementById('whoMsg');
+  el.textContent=wrongMsgs[wrongCount%wrongMsgs.length];
+  el.classList.add('show');
+  wrongCount++;
+  setTimeout(()=>el.classList.remove('show'),2000);
+}
+function rightWho(){
+  document.getElementById('rightWho').classList.add('glow');
+  burst(window.innerWidth/2,window.innerHeight/2,25);
+  setTimeout(()=>go(3),700);
+}
+
+// ── SCREEN 3: TIMELINE ──
+function startTimeline(){
+  ['tl1','tl2','tl3','tl4','tl5'].forEach((id,i)=>{
+    setTimeout(()=>document.getElementById(id).classList.add('vis'),i*450+200);
+  });
+}
+
+// ── SCREEN 4: CHAT ──
+function startChat(){
+  const seq=[
+    {id:'typing1',show:true,delay:0},
+    {id:'cb1',delay:800},
+    {id:'typing1',show:false,delay:850},
+    {id:'cb2',delay:1400},
+    {id:'cb3',delay:2200},
+    {id:'typing2',show:true,delay:2800},
+    {id:'cb4',delay:3500},
+    {id:'typing2',show:false,delay:3550},
+    {id:'cb5',delay:4300},
+    {id:'cb6',delay:5000},
+    {id:'cb7',delay:5800},
+    {id:'chatNext',delay:6400,btn:true},
+  ];
+  seq.forEach(s=>{
+    setTimeout(()=>{
+      const el=document.getElementById(s.id);
+      if(!el)return;
+      if(s.btn){el.classList.remove('hidden');return;}
+      if(s.show===false){el.classList.remove('vis');return;}
+      el.classList.add('vis');
+    },s.delay);
+  });
+}
+
+// ── SCREEN 5: QUIZ ──
+const qs=[
+  {q:"What do you call someone who stayed up every night reading and STILL passed the bar?",
+   opts:["A student 🙄","Someone lucky 😂","SNUGGLES THE BADDIE LAWYER 👑⚖️","Just a person"],c:2,fb:"CORRECT!! That's literally you!! 🎉"},
+  {q:"Someone prayed for you during their morning devotion. What does that make them?",
+   opts:["Just being nice 😐","Your personal prayer warrior 🙏💛","Bored probably 😂","A pastor"],c:1,fb:"Exactly!! Don't forget that!! 🦋"},
+  {q:"You passed your bar with a 2:2. What is the correct reaction?",
+   opts:["Cry about it 😭","Compare yourself to others 🤷","CELEBRATE!! You didn't fail!! 🎊","Stay sad"],c:2,fb:"YESSS!! You passed!! That's the W!! 🎉"},
+];
+let qi=0,answered=false;
+function initQuiz(){qi=0;answered=false;renderQ();}
+function renderQ(){
+  answered=false;
+  const q=qs[qi];
+  document.getElementById('qnum').textContent=`Question ${qi+1} of ${qs.length}`;
+  document.getElementById('qq').textContent=q.q;
+  document.getElementById('qfb').textContent='';
+  document.getElementById('qbar').style.width=`${(qi/qs.length)*100}%`;
+  const el=document.getElementById('qopts');
+  el.innerHTML='';
+  q.opts.forEach((o,i)=>{
+    const b=document.createElement('button');
+    b.className='qopt';b.textContent=o;
+    b.onclick=()=>answerQ(i,b);
+    el.appendChild(b);
+  });
+}
+function answerQ(idx,btn){
+  if(answered)return;answered=true;
+  const q=qs[qi];
+  if(idx===q.c){
+    btn.classList.add('correct');
+    document.getElementById('qfb').textContent=q.fb;
+    burst(window.innerWidth/2,window.innerHeight*0.6,15);
+    setTimeout(()=>{
+      qi++;
+      if(qi<qs.length)renderQ();
+      else{document.getElementById('qbar').style.width='100%';setTimeout(()=>go(6),500);}
+    },1600);
+  }else{
+    btn.classList.add('wrong');
+    document.getElementById('qfb').textContent="Hmm try again 😂";
+    setTimeout(()=>{btn.classList.remove('wrong');document.getElementById('qfb').textContent='';answered=false;},900);
+  }
+}
+
+// ── SCREEN 6: CONFETTI ──
+let taps=0;
+function doConfetti(e){
+  e.preventDefault();
+  taps++;
+  document.getElementById('tapNum').textContent=taps;
+  document.getElementById('czHint').style.opacity='0';
+  const zone=document.getElementById('czone');
+  const rect=zone.getBoundingClientRect();
+  const touch=e.touches?e.touches[0]:e;
+  const x=touch.clientX-rect.left,y=touch.clientY-rect.top;
+  const cols=['#C9A84C','#F0D080','#E8637A','#B57BCA','#4ECDC4','#fff','#FFF0B0'];
+  for(let i=0;i<10;i++){
+    const p=document.createElement('div');
+    p.className='cpiece';
+    const sz=Math.random()*8+5;
+    p.style.cssText=`left:${x+(Math.random()-.5)*70}px;top:${y}px;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'3px'};animation-duration:${Math.random()*.7+.5}s;`;
+    zone.appendChild(p);
+    setTimeout(()=>p.remove(),1500);
+  }
+  if(taps===15){
+    document.getElementById('czHint').style.opacity='1';
+    document.getElementById('czHint').innerHTML='15 claps!! 🎉<br>You earned your letter 💌';
+    document.getElementById('confNext').classList.remove('hidden');
+  }
+}
+
+// ── SCREEN 7: PRAYER ──
+function animatePrayer(){
+  const card=document.getElementById('prayerCard');
+  card.style.opacity='0';card.style.transform='translateY(20px)';
+  setTimeout(()=>{card.style.transition='all 0.8s ease';card.style.opacity='1';card.style.transform='translateY(0)';},200);
+}
+
+// ── SCREEN 9: FINAL ──
+function finalWrong(btn){
+  btn.classList.add('wrong');
+  document.getElementById('finalFb').textContent='Are you sure?? Think harder 😂';
+  setTimeout(()=>{btn.classList.remove('wrong');document.getElementById('finalFb').textContent='';},900);
+}
+function finalRight(btn){
+  btn.classList.add('correct');
+  document.getElementById('finalFb').textContent='Obviously!! 😏🦋 You already knew!!';
+  burst(window.innerWidth/2,window.innerHeight/2,40);
+  setTimeout(()=>burst(window.innerWidth/2,window.innerHeight/2,40),400);
+  setTimeout(()=>document.getElementById('s9Next').classList.remove('hidden'),1200);
+}
+
+// ── SCREEN 10: LOVE ME ──
+let noClicks=0;
+const noFeedback=['😂 try again','that button is shrinking for a reason 👀','keep going...','almost there 😭','last chance!!'];
+function clickNo(){
+  noClicks++;
+  const noBtn=document.getElementById('noBtn');
+  const yesBtn=document.getElementById('yesBtn');
+  const fb=document.getElementById('loveFb');
+  const newSize=Math.max(8,18-(noClicks*2));
+  const newPad=Math.max(4,16-(noClicks*2));
+  noBtn.style.fontSize=newSize+'px';
+  noBtn.style.padding=newPad+'px '+(newPad*2)+'px';
+  const newYesSize=Math.min(32,18+(noClicks*2));
+  const newYesPad=Math.min(28,16+(noClicks*2));
+  yesBtn.style.fontSize=newYesSize+'px';
+  yesBtn.style.padding=newYesPad+'px '+(newYesPad*2)+'px';
+  fb.textContent=noFeedback[Math.min(noClicks-1,noFeedback.length-1)];
+  if(noClicks>=5){
+    noBtn.textContent='Yes 🦋';
+    noBtn.style.background='linear-gradient(135deg,var(--rose),#FF8FA3)';
+    noBtn.style.border='none';noBtn.style.color='white';
+    noBtn.style.fontSize='10px';
+    noBtn.onclick=()=>clickYes();
+    fb.textContent='Even the No button knows the answer 😂';
+  }
+}
+function clickYes(){
+  document.getElementById('loveFb').textContent='That\'s what I thought 🦋💛';
+  burst(window.innerWidth/2,window.innerHeight*0.5,50);
+  setTimeout(()=>burst(window.innerWidth/2,window.innerHeight*0.5,50),300);
+  setTimeout(()=>burst(window.innerWidth/2,window.innerHeight*0.5,50),600);
+  const yb=document.getElementById('yesBtn');
+  yb.style.transform='scale(1.1)';
+  yb.style.boxShadow='0 0 60px rgba(232,99,122,0.8)';
+}
+
+// ── CONFETTI BURST ──
+function burst(x,y,count){
+  const cols=['#C9A84C','#F0D080','#E8637A','#B57BCA','#4ECDC4','#fff','#FFF0B0','#FFB347'];
+  for(let i=0;i<count;i++){
+    const el=document.createElement('div');
+    const sz=Math.random()*10+4;
+    el.style.cssText=`position:fixed;width:${sz}px;height:${sz}px;background:${cols[Math.floor(Math.random()*cols.length)]};border-radius:${Math.random()>.5?'50%':'3px'};left:${x}px;top:${y}px;z-index:999;pointer-events:none;animation:none;`;
+    document.body.appendChild(el);
+    const angle=Math.random()*Math.PI*2,speed=Math.random()*8+4,gravity=0.3;
+    let vx=Math.cos(angle)*speed,vy=Math.sin(angle)*speed-6;
+    let cx=x,cy=y,op=1;
+    function animPiece(){
+      vy+=gravity;cx+=vx;cy+=vy;op-=0.018;vx*=0.99;
+      el.style.left=cx+'px';el.style.top=cy+'px';el.style.opacity=op;
+      if(op>0)requestAnimationFrame(animPiece);else el.remove();
+    }
+    requestAnimationFrame(animPiece);
+  }
+}
+</script>
+</body>
+</html>
